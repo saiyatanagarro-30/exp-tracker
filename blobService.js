@@ -25,7 +25,7 @@ async function uploadImage(file) {
     blobHTTPHeaders: { blobContentType: file.mimetype }
   });
 
-  // 🔐 Generate SAS (read-only, time-limited)
+  // Generate SAS (read-only, time-limited)
   const sasToken = generateBlobSASQueryParameters(
     {
       containerName,

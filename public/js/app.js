@@ -70,13 +70,6 @@ async function deleteExpense(id) {
 
 loadExpenses();
 
-// Load saved background on startup
-document.addEventListener("DOMContentLoaded", () => {
-  const savedBg = localStorage.getItem("bgImageUrl");
-  if (savedBg) {
-    setBackground(savedBg);
-  }
-});
 
 
 // Background Image Upload
@@ -91,15 +84,6 @@ uploadInput.addEventListener("change", async () => {
   const file = uploadInput.files[0];
   if (!file) return;
 
-  const newHash = getFileHash(file);
-  const savedHash = localStorage.getItem("bgImageHash");
-  const savedUrl = localStorage.getItem("bgImageUrl");
-
-  // Same image → reuse
-  if (newHash === savedHash && savedUrl) {
-    setBackground(savedUrl);
-    return;
-  }
 
   // New image → upload
   const formData = new FormData();
@@ -112,16 +96,11 @@ uploadInput.addEventListener("change", async () => {
 
   const data = await res.json();
 
-  localStorage.setItem("bgImageUrl", data.imageUrl);
-  localStorage.setItem("bgImageHash", newHash);
 
   setBackground(data.imageUrl);
 });
 
 
-function getFileHash(file) {
-  return `${file.name}_${file.size}_${file.lastModified}`;
-}
 
 function setBackground(url) {
   document.body.style.backgroundImage = `url(${url})`;
@@ -129,3 +108,19 @@ function setBackground(url) {
   document.body.style.backgroundPosition = "center";
 }
 
+
+document.getElementById('processBtn').addEventListener('click', async () => {
+    const resultEl = document.getElementById('result');
+    resultEl.textContent = 'Processing...';
+
+    try {
+        // const res = await fetch('http://localhost:7071/api/processOrders'); // Local URL for testing
+        const res = await fetch("https://fa-app-dev-et-eehvhmasayakfefa.centralindia-01.azurewebsites.net/api/processOrders");
+        const data = await res.json();
+
+        resultEl.textContent = data.message;
+    } catch (err) {
+        resultEl.textContent = 'Failed to process orders';
+        console.error(err);
+    }
+});
