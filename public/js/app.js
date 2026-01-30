@@ -115,7 +115,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
 
     try {
         // const res = await fetch('http://localhost:7071/api/processOrders'); // Local URL for testing
-        const res = await fetch("https://fa-app-dev-et-eehvhmasayakfefa.centralindia-01.azurewebsites.net/");
+        const res = await fetch("https://fa-app-dev-et-eehvhmasayakfefa.centralindia-01.azurewebsites.net/api/processOrders");
         const data = await res.json();
 
         resultEl.textContent = data.message;
