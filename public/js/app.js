@@ -124,3 +124,36 @@ document.getElementById('processBtn').addEventListener('click', async () => {
         console.error(err);
     }
 });
+
+const LOGIC_APP_URL = "https://prod-28.centralindia.logic.azure.com:443/workflows/38d7078f4a1b4e73a4fe52e19fdb2c30/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=k_61wEUKbmx4w46n7_uoB54fe9w_e995FP0bUujf9SE";
+
+document.getElementById("sendLogicBtn").addEventListener("click", async () => {
+  const message = document.getElementById("logicMessage").value;
+  const statusEl = document.getElementById("logicStatus");
+
+  if (!message) {
+    statusEl.innerText = "Message cannot be empty";
+    return;
+  }
+
+  try {
+    const response = await fetch(LOGIC_APP_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+
+    statusEl.innerText = data.status === "success"
+      ? "Email sent successfully"
+      : "Failed to send email to Logic App";
+
+  } catch (err) {
+    console.error(err);
+    statusEl.innerText = "Error calling Logic App";
+  }
+});
+
