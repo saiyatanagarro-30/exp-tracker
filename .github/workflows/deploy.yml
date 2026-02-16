@@ -36,10 +36,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Deploy to Azure Web App
+      # 👇 NEW: Deploy to STAGING slot first
+      - name: Deploy to Staging Slot
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: as-app-dev-et
+          slot-name: staging
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+          package: .
+
+      # 👇 EXISTING: Deploy to PRODUCTION
+      - name: Deploy to Production
         uses: azure/webapps-deploy@v3
         with:
           app-name: as-app-dev-et
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
-
